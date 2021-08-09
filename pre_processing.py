@@ -59,3 +59,15 @@ def remove_shortners(dataset:pandas.core.frame.DataFrame) -> pandas.core.frame.D
     """
 
     return dataset[~dataset.parseurl_domain.isin(SHORTENERS)]
+
+def remove_duplication(dataset:pandas.core.frame.DataFrame) -> pandas.core.frame.DataFrame:
+    """ Deduplicate dataset
+
+    Arguments:
+        dataset: entire URL dataset, needs to contains the following fields
+            - netloc
+    Returns:
+        Same dataset without the duplication
+    """
+
+    return dataset.drop_duplicates(subset='netloc')
