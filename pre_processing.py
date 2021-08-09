@@ -5,6 +5,16 @@ from typing import Union, List
 SHORTENERS = ['bit', 'tinyurl', 'is', 's', 'gg']
 
 def solve_data_inconsistencies(dataset:pandas.core.frame.DataFrame) -> pandas.core.frame.DataFrame:
+    """ Solve data inconsistencies by setting all inconsistency as phishing
+
+    Arguments:
+        dataset: The entire dataset. Needs to contains the following fields
+                - parseurl_domain
+                - phishing_numeric
+                - url
+    Returns:
+        The dataset without inconsistencies
+    """
 
     inconsistency = data[~data.parseurl_domain.isin(SHORTENERS)].groupby(['parseurl_domain', 'phishing_numeric']).url.count().reset_index()
     '''
@@ -37,3 +47,15 @@ def solve_data_inconsistencies(dataset:pandas.core.frame.DataFrame) -> pandas.co
     dataset.phishing_numeric[dataset.parseurl_domain.isin(inconsistency.index)] = 1
 
     return dataset
+
+def remove_shortners(dataset:pandas.core.frame.DataFrame) -> pandas.core.frame.DataFrame:
+    """ Remove SHORTENERS from dataset
+
+    Arguments:
+        dataset: entire URL dataset, needs to contains the following fields
+            - parseurl_domain
+    Returns:
+        Same dataset without the SHORTENERS URLs
+    """
+
+    return dataset[~dataset.parseurl_domain.isin(SHORTENERS)]
