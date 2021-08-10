@@ -4,11 +4,11 @@
 
 TODO
 
-[x] **1.**Solve dataset inconsistences
-[x] **2.**Deduplicate dataset
-[x] **3.**Find promissing URL embeddings
-[x] **4.**Test one class classifier
-[ ] **5.**Grid search
+[x] Solve dataset inconsistences
+[x] Deduplicate dataset
+[x] Find promissing URL embeddings
+[x] Test one class classifier
+[ ] Grid search
 
 **1.)** The dataset was labeled using GSB. Because of that some samples has two different labels. Those samples were setted as phishing.
 
