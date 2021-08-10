@@ -12,7 +12,18 @@ from keras.utils.np_utils import to_categorical
 # Code based on https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/OneClass_NeuralNetwork/OneClass_NeuralNetwork.ipynb
 
 class OnePhishi():
-    """docstring for OneClassNN."""
+    """One Class Classifier
+
+    This is a simple neural network for phishing detection in which
+    we train it as an one class Classifier.
+
+    The results showed us this model sucks...
+
+    All phishing samples was classified as safe :(
+
+    The loss is extremely high in the validation/test stage.
+
+    """
 
     def __init__(self, input_shape:int, n_class:int=2, learning_rate:flaot=0.01):
         super(OneClassNN, self).__init__()
