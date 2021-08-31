@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import re
 import time
 import tldextract
+from tldextract import cache
 
 IP = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
@@ -52,15 +53,18 @@ def get_host_token(url):
 # kUrlDomainToken
 def get_domain_token(url):
 
-    url_tldex = tldextract.extract(url)
+    try:
+        url_tldex = tldextract.extract(url)
+        kUrlDomainToken = url_tldex.domain
 
-    kUrlDomainToken = url_tldex.domain
+    except:
+        return ''
     return kUrlDomainToken
 
 # kUrlOtherHostToken
 def get_domain_others(url):
 
-    url_tldex_subdomain = tldextract.extract(url)
+    url_tldex_subdomain = tldextract.extract(url).subdomain
 
     splited = url_tldex_subdomain.split('.')
     size_limit = 1 if len(splited) < 3 else len(splited) - 1 

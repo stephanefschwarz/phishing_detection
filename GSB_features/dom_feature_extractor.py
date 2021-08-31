@@ -38,12 +38,12 @@ def other_domain_ratio(url, forms):
 
     domain = get_domain_token(url)
 
-    all_domains = [get_domain_token(form.get('action')) for form in forms]
+    all_domains = [get_domain_token(form.get('action')) for form in forms if form.get('action') != '']
 
     occorrences = all_domains.count(domain)
     total = len(forms)
 
-    return total / occorrences
+    return occorrences / total
 
 # kPageActionURL
 def page_action_url(forms):
@@ -70,7 +70,7 @@ def has_pswd_inputs(html):
     return pswd_inputs, kPageHasPswdInputs
 
 # kPageHasRadioInputs
-def has_pswd_inputs(html):
+def has_radio_inputs(html):
 
     radio_inputs = html.findAll('inputs', {'type':'radio'})
     kPageHasRadioInputs = not(radio_inputs == [])
@@ -79,7 +79,7 @@ def has_pswd_inputs(html):
 
 
 # kPageHasCheckInputs
-def has_pswd_inputs(html):
+def has_check_inputs(html):
 
     check_inputs = html.findAll('inputs', {'type':'checkbox'})
     kPageHasCheckInputs = not(check_inputs == [])
@@ -107,7 +107,7 @@ def external_links(url, html):
 
     ext_domains, total_domains = token_ext_domain(url, html)
 
-    return total_domains / len(ext_domains)
+    return len(ext_domains) / total_domains
 
 # kPageSecureLinksFreq
 def use_https(html):
@@ -118,7 +118,7 @@ def use_https(html):
 
     starts_with_https = [bool(re.match(HTTPS, url) for url in all_links)]
 
-    return total_links / sum(starts_with_https)
+    return sum(starts_with_https) / total_links
 
 # ////////////////////////////////////////////////////
 # // DOM HTML script features
