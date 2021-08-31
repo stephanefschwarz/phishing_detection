@@ -1,6 +1,4 @@
- # EXTRACTOR [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
-# GSB features for phishing Detection
+# GSB features for phishing Detection [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > All features was obtained from [Chromium](https://github.com/chromium/chromium/tree/d7da0240cae77824d1eda25745c4022757499131/components/safe_browsing/content/renderer/phishing_classifier) Github repository.
 
@@ -59,7 +57,7 @@ Besides features from URL, the DOM HTML has also strong features to be explored.
 
 -  `kPageHasForms`: Set if the page has any `<form>` elements.
 
--  `kPageActionOtherDomainFreq`:The fraction of form elements whose |action| attribute points to a URL on a different domain from the document URL.
+-  `kPageActionOtherDomainFreq`: The fraction of form elements whose |action| attribute points to a URL on a different domain from the document URL.
 
 -  `kPageActionURL`: Token feature containing each URL that an |action| attribute points to.
 
