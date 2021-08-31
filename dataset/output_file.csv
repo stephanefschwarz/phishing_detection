@@ -1,0 +1,5 @@
+kUrlHostIsIpAddress,kUrlNumOtherHostTokensGTOne,kUrlNumOtherHostTokensGTThree,kPageHasForms,kPageActionOtherDomainFreq,kPageHasTextInputs,kPageHasPswdInputs,kPageHasRadioInputs,kPageHasCheckInputs,kPageExternalLinksFreq,kPageSecureLinksFreq,kPageNumScriptTagsGTOne,kPageNumScriptTagsGTSix,label
+False,False,False,True,0.0,False,False,False,False,0.9958005249343832,0.0017421602787456446,False,False,phishing
+False,False,False,True,0.0,False,False,False,False,0.7931034482758621,0.04,False,False,safe
+0,0,0,0,0.0,0,0,0,0,0.0,0.0,0,0,phishing
+False,False,False,True,0.0,False,False,False,False,0.8776371308016878,0.005,False,False,safe

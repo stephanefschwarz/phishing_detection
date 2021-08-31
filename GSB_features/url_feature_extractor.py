@@ -3,7 +3,6 @@ from urllib.parse import urlparse
 import re
 import time
 import tldextract
-from tldextract import cache
 
 IP = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
