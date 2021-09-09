@@ -57,8 +57,8 @@ def get_domain_token(url):
         kUrlDomainToken = url_tldex.domain
 
     except:
-        return ''
-    return kUrlDomainToken
+        return str("null")
+    return str(kUrlDomainToken)
 
 # kUrlOtherHostToken
 def get_domain_others(url):

@@ -43,6 +43,9 @@ def other_domain_ratio(url, forms):
     occorrences = all_domains.count(domain)
     total = len(forms)
 
+    if total == 0:
+        return 0
+
     return occorrences / total
 
 # kPageActionURL
@@ -107,6 +110,9 @@ def external_links(url, html):
 
     ext_domains, total_domains = token_ext_domain(url, html)
 
+    if total_domains == 0:
+        return 0
+
     return len(ext_domains) / total_domains
 
 # kPageSecureLinksFreq
@@ -117,6 +123,9 @@ def use_https(html):
     total_links = len(np.unique(all_links))
 
     starts_with_https = [bool(re.match(HTTPS, url) for url in all_links)]
+
+    if total_links == 0:
+        return 0
 
     return sum(starts_with_https) / total_links
 
@@ -155,6 +164,9 @@ def img_external_src(url, html):
     host_domain = get_domain_token(url)
 
     ext_domains = np.unique(np.where(all_img_domains != host_domain))
+    
+    if len(ext_domains) == 0:
+        return 0
 
     return len(all_img_domains) / len(ext_domains)
     

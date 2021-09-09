@@ -1,4 +1,3 @@
-from pandas.core.frame import DataFrame
 from dom_feature_extractor import *
 from url_feature_extractor import *
 
@@ -7,11 +6,24 @@ import pandas as pd
 import argparse
 import requests
 from bs4 import BeautifulSoup
+from tqdm import tqdm
+import logging
+import time
 
 import multiprocessing as mp
+from multiprocessing import Pool, cpu_count
+from multiprocessing import log_to_stderr, get_logger
 
+#log_to_stderr()
+#logger = get_logger()
+#logger.setLevel(logging.INFO)
+
+logging.basicConfig(filename='app.log', filemode='w', level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
+
+tqdm.pandas()
 
 features_names = [
+                    'url',
                     'kUrlHostIsIpAddress',
                     'kUrlNumOtherHostTokensGTOne',
                     'kUrlNumOtherHostTokensGTThree',
@@ -25,23 +37,8 @@ features_names = [
                     'kPageSecureLinksFreq',
                     'kPageNumScriptTagsGTOne',
                     'kPageNumScriptTagsGTSix',
-                    'label'
+                    'isPhishing'
                 ]
-def main():
-
-    pool = mp.Pool(processes=mp.cpu_count())
-
-    args = command_line_parsing()
-
-    dataset_path = args.url_dataset
-    dataset = pd.read_csv(dataset_path, delimiter=';')
-
-    sample_features = pool.map(extract_features, [(idx, row) for idx, row in dataset.iterrows()])
-
-    features_extracted = DataFrame(sample_features, columns=features_names)
-
-    features_extracted.to_csv(args.output_file, index=False)
-
 def command_line_parsing():
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -58,20 +55,20 @@ def command_line_parsing():
 
     return parser.parse_args()
 
-def extract_features( args ):
+def extract_features( row ):  
    
-    _, row = args
-    
     features = []
 
     url = row.url
     label = row.label
 
+
+
     try:            
         page = requests.get(url)
 
     except:
-        return [0] * 13 + [label]
+        return [0] * 14 + [label]
 
     html = BeautifulSoup(page.content, 'html.parser')
 
@@ -128,8 +125,62 @@ def extract_features( args ):
     # print(kPageNumScriptTagsGTSix)
 
     features.append(label)
+    features.append(url)
 
     return features
+
+def process_partition(partition):
+
+    return partition.apply(extract_features, axis=1)
+
+def parallelizedSeriesApply(data, extract_features, 
+                            NUM_PROCESSES=min(10, cpu_count()), 
+                            NUM_PARTITIONS=cpu_count(), 
+                            processPartition=process_partition):
+
+    partitions = np.array_split(data, NUM_PARTITIONS)
+    results = []
+
+    with Pool(processes=NUM_PROCESSES) as p:
+        with tqdm(total=NUM_PARTITIONS, desc='Parallel Processing') as pbar:
+            for result in p.imap_unordered(processPartition, partitions):
+                pbar.update()
+                results.extend(result)
+
+    df = pd.DataFrame(results, columns=features_names)
+
+    return df
+    #return pd.concat(results)
+
+
+def main():
+
+    args = command_line_parsing()
+
+    dataset_path = args.url_dataset
+    dataset = pd.read_csv(dataset_path)
+
+    dataset = dataset.drop_duplicates(subset=['url'])
+
+    print('----'*10)
+    
+    logging.info("Extracting features... \n\n")
+    
+    start_time = time.time()
+
+    logging.info("Start time: {:.2f}".format(start_time))
+    
+    output_result = parallelizedSeriesApply(dataset, extract_features)
+    
+    logging.info("End time: {:.2f}".format(time.time()))
+    logging.info("Total time spended: {:.2f}".format(time.time() - start_time))
+
+    logging.info("Saving file...")
+
+    output_result.to_csv(args.output_file, index=False)
+
+    logging.info("Done!")
+
 
 if __name__ == '__main__':
     main()
